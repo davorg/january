@@ -33,7 +33,7 @@ $(document).ready(function() {
 
   var jan_percent  = (ms_thru_jan * 100) / ms_in_jan;
 
-  $('#data').html(jan_percent.toFixed(2) + '%');
+  $('#data').html(jan_percent.toFixed(0) + '%');
 
   var yourtimezone = moment.tz.guess();
   $('#yourtimezone').html(yourtimezone);
