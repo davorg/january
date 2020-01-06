@@ -1,24 +1,3 @@
-function gameClass(now, aGame) {
-  var gameStart = moment.tz(aGame.date, 'UTC');
-  var gameEnd   = gameStart.clone().add(105, 'minutes');
-
-  if (gameEnd < now) {
-    return 'past';
-  }
-  if (gameStart <= now && now <= gameEnd) {
-    return 'present';
-  }
-
-  return 'future';
-}
-
-function showHide(show) {
-  if (show) {
-    $('.past').show(400);
-  } else {
-    $('.past').hide(400);
-  }
-}
 
 $(document).ready(function() {
   var now             = new Date();
