@@ -23,9 +23,9 @@ function showHide(show) {
 $(document).ready(function() {
   var now             = new Date();
   var ms_now          = now.getTime();
-  var start_of_jan    = new Date('2020-01-01 00:00:00');
+  var start_of_jan    = new Date('2020/01/01 00:00:00');
   var ms_start_of_jan = start_of_jan.getTime();
-  var end_of_jan      = new Date('2020-02-01 00:00:00');
+  var end_of_jan      = new Date('2020/02/01 00:00:00');
   var ms_end_of_jan   = end_of_jan.getTime();
 
   var ms_in_jan       = ms_end_of_jan - ms_start_of_jan;
