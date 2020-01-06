@@ -46,11 +46,11 @@ $(document).ready(function() {
     data: [{
       type: "pie",
       startAngle: 270,
-      yValueFormatString: "##0.00\"%\"",
+      yValueFormatString: "##0\"%\"",
       indexLabel: "{label} {y}",
       dataPoints: [
         {y: jan_percent, label: "Done", color: "green"},
-        {y: 100 - jan_percent, label: "To do", color: "red" },
+        {y: 100 - jan_percent, label: "To do", color: "white" },
       ]
     }]
   });
