@@ -5,14 +5,14 @@ $(document).ready(function() {
   if (now.getMonth()) {
     not_january();
   } else {
-    january(now.getTime());
+    january(now.getTime(), now.getFullYear());
   }
 });
 
-function january(ms_now) {
-  var start_of_jan    = new Date('2020/01/01 00:00:00');
+function january(ms_now, year) {
+  var start_of_jan    = new Date(year + '/01/01 00:00:00');
   var ms_start_of_jan = start_of_jan.getTime();
-  var end_of_jan      = new Date('2020/02/01 00:00:00');
+  var end_of_jan      = new Date(year + '/02/01 00:00:00');
   var ms_end_of_jan   = end_of_jan.getTime();
 
   var ms_in_jan       = ms_end_of_jan - ms_start_of_jan;
