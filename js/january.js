@@ -1,7 +1,15 @@
 
 $(document).ready(function() {
   var now             = new Date();
-  var ms_now          = now.getTime();
+
+  if (now.getMonth()) {
+    not_january();
+  } else {
+    january(now.getTime());
+  }
+});
+
+function january(ms_now) {
   var start_of_jan    = new Date('2020/01/01 00:00:00');
   var ms_start_of_jan = start_of_jan.getTime();
   var end_of_jan      = new Date('2020/02/01 00:00:00');
@@ -34,4 +42,10 @@ $(document).ready(function() {
     }]
   });
   chart.render();
-});
+}
+
+function not_january() {
+    $('#data').html(
+      "<br>It's not January, is it? Come back next year."
+    );
+}
