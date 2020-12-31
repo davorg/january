@@ -3,7 +3,7 @@ $(document).ready(function() {
   var now             = new Date();
 
   if (now.getMonth()) {
-    not_january();
+    not_january(now);
   } else {
     january(now.getTime(), now.getFullYear());
   }
@@ -44,8 +44,16 @@ function january(ms_now, year) {
   chart.render();
 }
 
-function not_january() {
+function not_january(now) {
+    var when = 'next year';
+    if (now.getMonth() == 11) {
+      when = 'next month';
+      if (now.getDate() == 31) {
+        when = 'tomorrow';
+      }
+    }
+    
     $('#data').html(
-      "<br>It's not January, is it? Come back next year."
+      "<br>It's not January, is it? Come back " + when + "."
     );
 }
