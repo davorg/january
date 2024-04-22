@@ -1,6 +1,5 @@
-
-$(document).ready(function() {
-  var now             = new Date();
+document.addEventListener('DOMContentLoaded', function() {
+  var now = new Date();
 
   if (now.getMonth()) {
     not_january(now);
@@ -20,10 +19,10 @@ function january(ms_now, year) {
 
   var jan_percent  = (ms_thru_jan * 100) / ms_in_jan;
 
-  $('#data').html(jan_percent.toFixed(0) + '%');
+  document.getElementById('data').innerHTML = jan_percent.toFixed(0) + '%';
 
   var yourtimezone = moment.tz.guess();
-  $('#yourtimezone').html(yourtimezone);
+  document.getElementById('yourtimezone').innerHTML = yourtimezone;
 
   var chart = new CanvasJS.Chart("chartContainer", {
     animationEnabled: true,
@@ -53,7 +52,6 @@ function not_january(now) {
       }
     }
     
-    $('#data').html(
-      "<br>It's not January, is it? Come back " + when + "."
-    );
+    document.getElementById('data').innerHTML =
+      "<br>It's not January, is it? Come back " + when + ".";
 }
