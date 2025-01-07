@@ -21,8 +21,8 @@ function january(ms_now, year) {
 
   document.getElementById('data').innerHTML = jan_percent.toFixed(0) + '%';
 
-  var yourtimezone = moment.tz.guess();
-  document.getElementById('yourtimezone').innerHTML = yourtimezone;
+  // var yourtimezone = moment.tz.guess();
+  // document.getElementById('yourtimezone').innerHTML = yourtimezone;
 
   var chart = new CanvasJS.Chart("chartContainer", {
     animationEnabled: true,
