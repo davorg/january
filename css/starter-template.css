@@ -58,6 +58,59 @@ main.container {
   font-weight: 700;
   letter-spacing: -0.02em;
   margin: 0.25rem 0 0.5rem 0;
+  position: relative;
+  display: inline-block;
+}
+
+.tracker__title-edit-icon {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  cursor: pointer;
+  margin-left: 0.5rem;
+  font-size: 0.7em;
+  color: var(--muted);
+  vertical-align: middle;
+}
+
+.tracker__title:hover .tracker__title-edit-icon {
+  opacity: 1;
+}
+
+.tracker__title-edit-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.tracker__title-input {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  padding: 0.25rem 0.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--card-border);
+  border-radius: 6px;
+  color: var(--text);
+  min-width: 300px;
+}
+
+.tracker__title-input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.tracker__title-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  padding: 0.25rem 0.5rem;
+  transition: transform 0.1s ease;
+}
+
+.tracker__title-btn:hover {
+  transform: scale(1.2);
 }
 
 .tracker__subtitle {

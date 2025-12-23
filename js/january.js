@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
+  initEditableTitle();
   const realNow = new Date();
 
   // Optional override: ?now=2025-12-15T12:00:00
