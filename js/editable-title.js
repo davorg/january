@@ -23,12 +23,22 @@ function initEditableTitle() {
   editIcon.textContent = '✏️';
   editIcon.setAttribute('role', 'button');
   editIcon.setAttribute('aria-label', 'Edit title');
+  editIcon.setAttribute('tabindex', '0');
   titleElement.appendChild(editIcon);
 
   // Handle edit icon click
   editIcon.addEventListener('click', function(e) {
     e.stopPropagation();
     enterEditMode(titleElement, textSpan);
+  });
+
+  // Handle edit icon keyboard
+  editIcon.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      e.stopPropagation();
+      enterEditMode(titleElement, textSpan);
+    }
   });
 }
 
@@ -88,8 +98,7 @@ function enterEditMode(titleElement, textSpan) {
   input.addEventListener('keydown', function(e) {
     if (e.key === 'Enter') {
       saveTitle(input.value.trim(), titleElement, textSpan, editContainer);
-    }
-    if (e.key === 'Escape') {
+    } else if (e.key === 'Escape') {
       cancelEdit(titleElement, editContainer);
     }
   });
