@@ -21,7 +21,7 @@ function initEditableTitle() {
   // Add edit icon
   const editIcon = document.createElement('span');
   editIcon.className = 'tracker__title-edit-icon';
-  editIcon.textContent = '✏️';
+  editIcon.textContent = '✎';
   editIcon.setAttribute('role', 'button');
   editIcon.setAttribute('aria-label', 'Edit title');
   editIcon.setAttribute('tabindex', '0');
