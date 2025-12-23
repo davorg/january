@@ -1,57 +1,112 @@
 document.addEventListener('DOMContentLoaded', function() {
-  var now = new Date();
+  const realNow = new Date();
 
-  if (now.getMonth()) {
-    not_january(now);
+  // Optional override: ?now=2025-12-15T12:00:00
+  // (If omitted, uses the visitor's real local time)
+  const now = getOverrideNow(realNow);
+
+  // Optional override: ?month=12&year=2025   (month is 1–12)
+  // Optional override: ?thismonth=1         (uses the visitor's current month)
+  const target = getTargetMonth(now);
+
+  const tzEl = document.getElementById('yourtimezone');
+  if (tzEl) {
+    tzEl.textContent = detectedTimeZone();
+  }
+
+  if (target.monthIndex === 0) {
+    // It's "January tracker" mode: only show progress in January.
+    if (now.getMonth() === 0) {
+      monthProgress(now.getTime(), target.year, target.monthIndex);
+    } else {
+      not_target_month(now, target.monthIndex);
+    }
   } else {
-    january(now.getTime(), now.getFullYear());
+    // Testing / other month: always show that month’s progress.
+    monthProgress(now.getTime(), target.year, target.monthIndex);
   }
 });
 
-function january(ms_now, year) {
-  var start_of_jan    = new Date(year + '/01/01 00:00:00');
-  var ms_start_of_jan = start_of_jan.getTime();
-  var end_of_jan      = new Date(year + '/02/01 00:00:00');
-  var ms_end_of_jan   = end_of_jan.getTime();
-
-  var ms_in_jan       = ms_end_of_jan - ms_start_of_jan;
-  var ms_thru_jan     = ms_now - ms_start_of_jan;
-
-  var jan_percent  = (ms_thru_jan * 100) / ms_in_jan;
-
-  document.getElementById('data').innerHTML = jan_percent.toFixed(0) + '%';
-
-  // var yourtimezone = moment.tz.guess();
-  // document.getElementById('yourtimezone').innerHTML = yourtimezone;
-
-  var chart = new CanvasJS.Chart("chartContainer", {
-    animationEnabled: true,
-    title: {
-      text: ""
-    },
-    data: [{
-      type: "pie",
-      startAngle: 270,
-      yValueFormatString: "##0\"%\"",
-      indexLabel: "{label} {y}",
-      dataPoints: [
-        {y: jan_percent, label: "Done", color: "green"},
-        {y: 100 - jan_percent, label: "To do", color: "white" },
-      ]
-    }]
-  });
-  chart.render();
+function detectedTimeZone() {
+  return Intl.DateTimeFormat().resolvedOptions().timeZone || "UTC";
 }
 
-function not_january(now) {
-    var when = 'next year';
-    if (now.getMonth() == 11) {
-      when = 'next month';
-      if (now.getDate() == 31) {
-        when = 'tomorrow';
-      }
+function getOverrideNow(fallbackNow) {
+  const p = new URLSearchParams(location.search);
+  const nowParam = p.get('now');
+  if (!nowParam) return fallbackNow;
+
+  const d = new Date(nowParam);
+  return Number.isNaN(d.getTime()) ? fallbackNow : d;
+}
+
+function getTargetMonth(now) {
+  const p = new URLSearchParams(location.search);
+
+  if (p.get('thismonth') === '1') {
+    return { year: now.getFullYear(), monthIndex: now.getMonth() };
+  }
+
+  const yearParam = parseInt(p.get('year'), 10);
+  const monthParam = parseInt(p.get('month'), 10); // 1–12
+
+  if (!Number.isNaN(yearParam) && monthParam >= 1 && monthParam <= 12) {
+    return { year: yearParam, monthIndex: monthParam - 1 };
+  }
+
+  // Default behaviour: January tracker
+  return { year: now.getFullYear(), monthIndex: 0 };
+}
+
+function clamp(n, min, max) {
+  return Math.min(max, Math.max(min, n));
+}
+
+function monthProgress(ms_now, year, monthIndex) {
+  const start = new Date(year, monthIndex, 1, 0, 0, 0, 0);
+  const end   = new Date(year, monthIndex + 1, 1, 0, 0, 0, 0);
+
+  const ms_start = start.getTime();
+  const ms_end   = end.getTime();
+
+  const ms_in_month   = ms_end - ms_start;
+  const ms_thru_month = ms_now - ms_start;
+
+  let percent = (ms_thru_month * 100) / ms_in_month;
+  percent = clamp(percent, 0, 100);
+
+  const dataEl = document.getElementById('data');
+  if (dataEl) {
+    dataEl.textContent = percent.toFixed(0) + '%';
+  }
+
+  const donut = document.getElementById('donut');
+  if (donut) {
+    donut.style.setProperty('--p', percent.toFixed(2));
+  }
+}
+
+function not_target_month(now, targetMonthIndex) {
+  const monthNames = [
+    "January","February","March","April","May","June",
+    "July","August","September","October","November","December"
+  ];
+
+  let when = 'next year';
+  if (now.getMonth() === ((targetMonthIndex + 11) % 12)) {
+    when = 'next month';
+    // Good enough for this toy site; you can make this exact if you care.
+    if (now.getDate() >= 28) {
+      when = 'soon';
     }
-    
-    document.getElementById('data').innerHTML =
-      "<br>It's not January, is it? Come back " + when + ".";
+  }
+
+  const dataEl = document.getElementById('data');
+  if (dataEl) {
+    dataEl.textContent = `It's not ${monthNames[targetMonthIndex]}, is it? Come back ${when}.`;
+  }
+  const donut = document.getElementById('donut');
+  if (donut) {
+    donut.style.setProperty('--p', '0');
+  }
 }
