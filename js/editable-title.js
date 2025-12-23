@@ -11,7 +11,7 @@ function initEditableTitle() {
   
   // Load custom title from localStorage
   const savedTitle = localStorage.getItem(STORAGE_KEY);
-  textSpan.textContent = savedTitle || titleElement.textContent;
+  textSpan.textContent = (savedTitle && savedTitle.trim()) || titleElement.textContent;
   
   // Clear and rebuild the title element
   titleElement.textContent = '';
@@ -66,6 +66,7 @@ function enterEditMode(titleElement, textSpan) {
 
   // Replace title with edit container
   const parent = titleElement.parentNode;
+  if (!parent) return;
   parent.insertBefore(editContainer, titleElement);
   titleElement.style.display = 'none';
 
@@ -75,7 +76,7 @@ function enterEditMode(titleElement, textSpan) {
 
   // Handle save
   saveBtn.addEventListener('click', function() {
-    saveTitle(input.value.trim(), textSpan, editContainer);
+    saveTitle(input.value.trim(), titleElement, textSpan, editContainer);
   });
 
   // Handle cancel
@@ -84,21 +85,17 @@ function enterEditMode(titleElement, textSpan) {
   });
 
   // Handle Enter key
-  input.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-      saveTitle(input.value.trim(), textSpan, editContainer);
-    }
-  });
-
-  // Handle Escape key
   input.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') {
+      saveTitle(input.value.trim(), titleElement, textSpan, editContainer);
+    }
     if (e.key === 'Escape') {
       cancelEdit(titleElement, editContainer);
     }
   });
 }
 
-function saveTitle(newTitle, textSpan, editContainer) {
+function saveTitle(newTitle, titleElement, textSpan, editContainer) {
   // If empty or whitespace only, revert to default
   if (!newTitle) {
     newTitle = DEFAULT_TITLE;
@@ -111,7 +108,7 @@ function saveTitle(newTitle, textSpan, editContainer) {
   textSpan.textContent = newTitle;
 
   // Exit edit mode
-  exitEditMode(textSpan.parentElement, editContainer);
+  exitEditMode(titleElement, editContainer);
 }
 
 function cancelEdit(titleElement, editContainer) {
