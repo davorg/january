@@ -5,11 +5,17 @@ function initEditableTitle() {
   const titleElement = document.getElementById('tracker-title');
   if (!titleElement) return;
 
+  // Wrap the text content in a span for easier manipulation
+  const textSpan = document.createElement('span');
+  textSpan.className = 'tracker__title-text';
+  
   // Load custom title from localStorage
   const savedTitle = localStorage.getItem(STORAGE_KEY);
-  if (savedTitle) {
-    titleElement.textContent = savedTitle;
-  }
+  textSpan.textContent = savedTitle || titleElement.textContent;
+  
+  // Clear and rebuild the title element
+  titleElement.textContent = '';
+  titleElement.appendChild(textSpan);
 
   // Add edit icon
   const editIcon = document.createElement('span');
@@ -22,13 +28,13 @@ function initEditableTitle() {
   // Handle edit icon click
   editIcon.addEventListener('click', function(e) {
     e.stopPropagation();
-    enterEditMode(titleElement);
+    enterEditMode(titleElement, textSpan);
   });
 }
 
-function enterEditMode(titleElement) {
-  // Get the text content, excluding the edit icon
-  const currentText = titleElement.firstChild.textContent;
+function enterEditMode(titleElement, textSpan) {
+  // Get the current text from the text span
+  const currentText = textSpan.textContent;
   
   // Create edit container
   const editContainer = document.createElement('div');
@@ -69,7 +75,7 @@ function enterEditMode(titleElement) {
 
   // Handle save
   saveBtn.addEventListener('click', function() {
-    saveTitle(input.value.trim(), titleElement, editContainer);
+    saveTitle(input.value.trim(), textSpan, editContainer);
   });
 
   // Handle cancel
@@ -80,7 +86,7 @@ function enterEditMode(titleElement) {
   // Handle Enter key
   input.addEventListener('keypress', function(e) {
     if (e.key === 'Enter') {
-      saveTitle(input.value.trim(), titleElement, editContainer);
+      saveTitle(input.value.trim(), textSpan, editContainer);
     }
   });
 
@@ -92,7 +98,7 @@ function enterEditMode(titleElement) {
   });
 }
 
-function saveTitle(newTitle, titleElement, editContainer) {
+function saveTitle(newTitle, textSpan, editContainer) {
   // If empty or whitespace only, revert to default
   if (!newTitle) {
     newTitle = DEFAULT_TITLE;
@@ -101,11 +107,11 @@ function saveTitle(newTitle, titleElement, editContainer) {
     localStorage.setItem(STORAGE_KEY, newTitle);
   }
 
-  // Update title text node
-  titleElement.firstChild.textContent = newTitle;
+  // Update title text in the span
+  textSpan.textContent = newTitle;
 
   // Exit edit mode
-  exitEditMode(titleElement, editContainer);
+  exitEditMode(textSpan.parentElement, editContainer);
 }
 
 function cancelEdit(titleElement, editContainer) {
