@@ -11,7 +11,8 @@ function initEditableTitle() {
   
   // Load custom title from localStorage
   const savedTitle = localStorage.getItem(STORAGE_KEY);
-  textSpan.textContent = (savedTitle && savedTitle.trim()) || titleElement.textContent;
+  const trimmedTitle = savedTitle?.trim();
+  textSpan.textContent = trimmedTitle || titleElement.textContent;
   
   // Clear and rebuild the title element
   titleElement.textContent = '';
@@ -43,6 +44,10 @@ function initEditableTitle() {
 }
 
 function enterEditMode(titleElement, textSpan) {
+  // Check parent exists before creating DOM elements
+  const parent = titleElement.parentNode;
+  if (!parent) return;
+
   // Get the current text from the text span
   const currentText = textSpan.textContent;
   
@@ -75,8 +80,6 @@ function enterEditMode(titleElement, textSpan) {
   editContainer.appendChild(cancelBtn);
 
   // Replace title with edit container
-  const parent = titleElement.parentNode;
-  if (!parent) return;
   parent.insertBefore(editContainer, titleElement);
   titleElement.style.display = 'none';
 
