@@ -27,7 +27,8 @@ function initEditableTitle() {
 }
 
 function enterEditMode(titleElement) {
-  const currentText = titleElement.childNodes[0].textContent;
+  // Get the text content, excluding the edit icon
+  const currentText = titleElement.firstChild.textContent;
   
   // Create edit container
   const editContainer = document.createElement('div');
@@ -100,8 +101,8 @@ function saveTitle(newTitle, titleElement, editContainer) {
     localStorage.setItem(STORAGE_KEY, newTitle);
   }
 
-  // Update title
-  titleElement.childNodes[0].textContent = newTitle;
+  // Update title text node
+  titleElement.firstChild.textContent = newTitle;
 
   // Exit edit mode
   exitEditMode(titleElement, editContainer);
