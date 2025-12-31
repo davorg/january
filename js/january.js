@@ -96,9 +96,8 @@ function not_target_month(now, targetMonthIndex) {
   let when = 'next year';
   if (now.getMonth() === ((targetMonthIndex + 11) % 12)) {
     when = 'next month';
-    // Good enough for this toy site; you can make this exact if you care.
-    if (now.getDate() >= 28) {
-      when = 'soon';
+    if (now.getDate() === 31) {
+      when = 'tomorrow';
     }
   }
 
